@@ -21,4 +21,7 @@ DB = "nem2p"
 def zone_apex():
     return {"Hello": "Hello API", "album_endpoint":"/albums","static_endpoint":"/static"}
 
-# More will go here TBD
+#Additional endpoint
+@app.get("/data") #Define the endpoint URL pattern
+def get_data():
+    return{"data": "Some kind of data"} #Return some data as JSON
