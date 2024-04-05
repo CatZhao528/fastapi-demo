@@ -15,13 +15,31 @@ app.mount("/static", StaticFiles(directory="static", html = True), name="static"
 DBHOST = os.environ.get('DBHOST')
 DBUSER = os.environ.get('DBUSER')
 DBPASS = os.environ.get('DBPASS')
-DB = "nem2p"
+DB = "tz3hpt"
 
-@app.get("/")  # zone apex
+@app.get("/")  # zone apex
 def zone_apex():
-    return {"Hello": "Hello API", "album_endpoint":"/albums","static_endpoint":"/static"}
+    return {"Hello": "Hello API", "album_endpoint":"/albums","static_endpoint":"/static"}
 
 #Additional endpoint
 @app.get("/data") #Define the endpoint URL pattern
 def get_data():
-    return{"data": "Some kind of data"} #Return some data as JSON
+    return{"data": "Some kind of data"} #Return some data as JSON
+
+@app.get("/albums")
+def get_all_albums():
+    db = MySQLdb.connect(host=DBHOST, user=DBUSER, passwd=DBPASS, db=DB)
+    c = db.cursor(MySQLdb.cursors.DictCursor)
+    c.execute("SELECT * FROM albums ORDER BY name")
+    results = c.fetchall()
+    db.close()
+    return results
+
+@app.get("/albums/{id}")
+def get_one_album(id):
+    db = MySQLdb.connect(host=DBHOST, user=DBUSER, passwd=DBPASS, db=DB)
+    c = db.cursor(MySQLdb.cursors.DictCursor)
+    c.execute("SELECT * FROM albums WHERE id=" + id)
+    results = c.fetchall()
+    db.close()
+    return results
